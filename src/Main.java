@@ -12,9 +12,9 @@ public class Main {
     public static void main(String args[]) {
 
         {
-            String in = "Hello????";
+            String in = "923758203945";
             byte[] enc;
-            byte[] dec;
+            String dec;
 
             enc = encrypt(in);
 
@@ -26,81 +26,50 @@ public class Main {
         }
     }
 
+//////////////////////////////////////////////////////////////////////
 
-//
-//    // ENCRYPT
-//    public static String encrypt(String strClearText, String encryptionKey) {
-//        String strData = "";
-//
-//        try {
-//            Key key = new SecretKeySpec(encryptionKey.getBytes(), "AES");
-//            Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
-//            cipher.init(Cipher.ENCRYPT_MODE, key);
-//            byte[] encryptedText = cipher.doFinal(strClearText.getBytes());
-//
-//            strData = new String(encryptedText);
-//
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//        return strData;
-//    }
-//
-//
-//    // DECRYPT
-//    public static String decrypt(String strEncrypted, String encryptionKey) {
-//        String strData = "";
-//
-//        try {
-//            Key key = new SecretKeySpec(encryptionKey.getBytes(), "AES");
-//            Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
-//            cipher.init(Cipher.DECRYPT_MODE, key);
-//
-//            strData = new String(cipher.doFinal(strEncrypted.getBytes()));
-//
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//        return strData;
-//    }
+    // ENCRYPT
+    public static byte[] encrypt(String strClearText) {
 
-    public static byte[] encrypt(String plainTextString) {
-        byte[] encrypted = null;
+        byte[] encryptedText={};
+
         try {
-
-            Key skeySpec = new SecretKeySpec(encryptionKey.getBytes(), "AES");
+            Key key = new SecretKeySpec(encryptionKey.getBytes(), "AES");
             Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
-            byte[] iv = new byte[cipher.getBlockSize()];
 
-            IvParameterSpec ivParams = new IvParameterSpec(iv);
-            cipher.init(Cipher.ENCRYPT_MODE, skeySpec,ivParams);
-            encrypted  = cipher.doFinal(plainTextString.getBytes());
-            System.out.println("encrypted string size:" + encrypted.length);
+            byte[] iv = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+            IvParameterSpec ivspec = new IvParameterSpec(iv);
 
-        } catch (Exception ex) {
-            ex.printStackTrace();
+            cipher.init(Cipher.ENCRYPT_MODE, key, ivspec);
+            encryptedText = cipher.doFinal(strClearText.getBytes());
+
+
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        return encrypted;
+
+        return encryptedText;
     }
 
-    public static  byte[]  decrypt(byte[] encryptedBytes) {
-        byte[] original = null;
-        Cipher cipher = null;
+
+    // DECRYPT
+    public static String decrypt(byte[] strEncrypted) {
+        String decryptedText = "";
+
         try {
-
             Key key = new SecretKeySpec(encryptionKey.getBytes(), "AES");
-            cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
-            //the block size (in bytes), or 0 if the underlying algorithm is not a block cipher
-            byte[] ivByte = new byte[cipher.getBlockSize()];
-            //This class specifies an initialization vector (IV). Examples which use
-            //IVs are ciphers in feedback mode, e.g., DES in CBC mode and RSA ciphers with OAEP encoding operation.
-            IvParameterSpec ivParamsSpec = new IvParameterSpec(ivByte);
-            cipher.init(Cipher.DECRYPT_MODE, key, ivParamsSpec);
-            original= cipher.doFinal(encryptedBytes);
+            Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
 
-        } catch (Exception ex) {
-            ex.printStackTrace();
+            byte[] iv = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+            IvParameterSpec ivspec = new IvParameterSpec(iv);
+
+            cipher.init(Cipher.DECRYPT_MODE, key, ivspec);
+            decryptedText = new String(cipher.doFinal(strEncrypted));
+
+
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        return original;
+        return decryptedText;
     }
 }
